@@ -10,8 +10,8 @@ using pet_hotel.Models;
 namespace dotnet_bakery.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220706204427_PetOwners")]
-    partial class PetOwners
+    [Migration("20220707181206_PetHotel")]
+    partial class PetHotel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,20 +28,23 @@ namespace dotnet_bakery.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("breed")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("checkedIn")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("checkedInAt")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("color")
+                        .HasColumnType("integer");
 
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("petColor")
-                        .HasColumnType("integer");
-
                     b.Property<int>("petOwnerid")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("petType")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
@@ -73,13 +76,13 @@ namespace dotnet_bakery.Migrations
 
             modelBuilder.Entity("pet_hotel.Pet", b =>
                 {
-                    b.HasOne("pet_hotel.PetOwner", "ownedBy")
+                    b.HasOne("pet_hotel.PetOwner", "petOwner")
                         .WithMany("pets")
                         .HasForeignKey("petOwnerid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ownedBy");
+                    b.Navigation("petOwner");
                 });
 
             modelBuilder.Entity("pet_hotel.PetOwner", b =>

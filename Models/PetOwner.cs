@@ -17,7 +17,7 @@ namespace pet_hotel
         public string emailAddress {get; set; }
 
         [JsonIgnore]
-        public ICollection<Pet> pets {get; set; }
+        public List<Pet> pets {get; set; }
 
         public int petCount {
             get {

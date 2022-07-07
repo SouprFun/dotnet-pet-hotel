@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace dotnet_bakery.Migrations
 {
-    public partial class PetOwners : Migration
+    public partial class PetHotel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,8 +31,9 @@ namespace dotnet_bakery.Migrations
                     name = table.Column<string>(type: "text", nullable: false),
                     petOwnerid = table.Column<int>(type: "integer", nullable: false),
                     checkedInAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    petType = table.Column<int>(type: "integer", nullable: false),
-                    petColor = table.Column<int>(type: "integer", nullable: false)
+                    breed = table.Column<int>(type: "integer", nullable: false),
+                    color = table.Column<int>(type: "integer", nullable: false),
+                    checkedIn = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

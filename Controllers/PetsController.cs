@@ -22,14 +22,15 @@ namespace pet_hotel.Controllers
         // This is just a stub for GET / to prevent any weird frontend errors that 
         // occur when the route is missing in this controller
         [HttpGet]
-        public IEnumerable<Pet> GetPets() {
-            return new List<Pet>();
+        public List<Pet> GetPets() {
+            return _context.Pets
+                .Include(pet => pet.petOwner).ToList();
         }
 
         [HttpGet("{id}")]
         public Pet getPetById(int id){
             return _context.Pets
-                .Include(pet => pet.ownedBy)
+                .Include(pet => pet.petOwner)
                 .SingleOrDefault(pet => pet.id == id);
         }
 
@@ -63,7 +64,7 @@ namespace pet_hotel.Controllers
 
         }
 
-        [HttpPut("{id}/In")]
+        [HttpPut("{id}/Out")]
         public IActionResult checkOutPet(int id){
             Pet pet = _context.Pets.Find(id);
             if (pet == null){

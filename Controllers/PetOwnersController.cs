@@ -12,35 +12,41 @@ namespace pet_hotel.Controllers
     public class PetOwnersController : ControllerBase
     {
         private readonly ApplicationContext _context;
-        public PetOwnersController(ApplicationContext context) {
+        public PetOwnersController(ApplicationContext context)
+        {
             _context = context;
         }
 
         // This is just a stub for GET / to prevent any weird frontend errors that 
         // occur when the route is missing in this controller
         [HttpGet]
-        public List<PetOwner> GetPetOwners() {
+        public List<PetOwner> GetPetOwners()
+        {
             return _context.PetOwners.Include(owner => owner.pets).ToList();
         }
 
         [HttpGet("{id}")]
-        public PetOwner GetPetOwnerById(int id){
+        public PetOwner GetPetOwnerById(int id)
+        {
             return _context.PetOwners
                 .Include(owner => owner.pets)
                 .SingleOrDefault(owner => owner.id == id);
         }
 
         [HttpPost]
-        public IActionResult addPetOwner([FromBody] PetOwner owner){
+        public IActionResult addPetOwner([FromBody] PetOwner owner)
+        {
             _context.PetOwners.Add(owner);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetPetOwnerById), new {id = owner.id}, owner);
+            return CreatedAtAction(nameof(GetPetOwnerById), new { id = owner.id }, owner);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult deletePetOwnerById(int id){
+        [HttpDelete("{id}")] 
+        public IActionResult deletePetOwnerById(int id)
+        {
             PetOwner owner = _context.PetOwners.Find(id);
-            if (owner == null){
+            if (owner == null)
+            {
                 return NotFound();
             }
             _context.PetOwners.Remove(owner);
@@ -48,12 +54,10 @@ namespace pet_hotel.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}/petcount")]
-        public IActionResult updatePetCountById(int id){
+        [HttpPut("{id}")]
+        public IActionResult updatePetOwnerById(int id)
+        {
             PetOwner owner = _context.PetOwners.Find(id);
-            if(owner.petCount == 0){
-                return NotFound();
-            }
             _context.Update(owner.petCount);
             _context.SaveChanges();
             return Ok();

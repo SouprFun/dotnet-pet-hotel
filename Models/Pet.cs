@@ -27,21 +27,22 @@ namespace pet_hotel
         [Required]
         public string name {get; set; }
 
-        public PetOwner ownedBy { get; set; }
+        public PetOwner petOwner { get; set; }
 
         public int petOwnerid { get; set; }
 
         public DateTime checkedInAt { get; set; }
     
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public PetBreedType petType { get; set; }
+        public PetBreedType breed { get; set; }
         
         [JsonConverter(typeof(JsonStringEnumConverter))]    
-        public PetColorType petColor { get; set; }
+        public PetColorType color { get; set; }
 
         public bool checkedIn { get; set; }
         public void petCheckIn(){
             checkedIn = true;
+            
         }
 
         public void petCheckOut(){
