@@ -8,7 +8,7 @@ namespace pet_hotel
     public enum PetBreedType {
         Poodle,     //0
         Shephard,   //1
-        Terrier,     //2
+        Terrier,    //2
         Bulldog,    //3
         Boxer,      //4
         Labrador,   //5
@@ -29,13 +29,23 @@ namespace pet_hotel
 
         public PetOwner ownedBy { get; set; }
 
-        public int petOwnerid {get; set; }
+        public int petOwnerid { get; set; }
 
-        public DateTime chekedInAt {get; set; }
+        public DateTime checkedInAt { get; set; }
     
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public PetBreedType petType { get; set; }
-
+        
+        [JsonConverter(typeof(JsonStringEnumConverter))]    
         public PetColorType petColor { get; set; }
+
+        public bool checkedIn { get; set; }
+        public void petCheckIn(){
+            checkedIn = true;
+        }
+
+        public void petCheckOut(){
+            checkedIn = false;
+        }
     }
 }

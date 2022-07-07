@@ -13,6 +13,7 @@ namespace pet_hotel
         public string name {get; set; }
 
         [Required]
+        [EmailAddress]
         public string emailAddress {get; set; }
 
         [JsonIgnore]

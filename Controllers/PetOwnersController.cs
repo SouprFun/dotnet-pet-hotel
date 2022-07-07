@@ -19,8 +19,45 @@ namespace pet_hotel.Controllers
         // This is just a stub for GET / to prevent any weird frontend errors that 
         // occur when the route is missing in this controller
         [HttpGet]
-        public IEnumerable<PetOwner> GetPets() {
-            return new List<PetOwner>();
+        public List<PetOwner> GetPetOwners() {
+            return _context.PetOwners.Include(owner => owner.pets).ToList();
+        }
+
+        [HttpGet("{id}")]
+        public PetOwner GetPetOwnerById(int id){
+            return _context.PetOwners
+                .Include(owner => owner.pets)
+                .SingleOrDefault(owner => owner.id == id);
+        }
+
+        [HttpPost]
+        public IActionResult addPetOwner([FromBody] PetOwner owner){
+            _context.PetOwners.Add(owner);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetPetOwnerById), new {id = owner.id}, owner);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult deletePetOwnerById(int id){
+            PetOwner owner = _context.PetOwners.Find(id);
+            if (owner == null){
+                return NotFound();
+            }
+            _context.PetOwners.Remove(owner);
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpPut("{id}/petcount")]
+        public IActionResult updatePetCountById(int id){
+            PetOwner owner = _context.PetOwners.Find(id);
+            if(owner.petCount == 0){
+                return NotFound();
+            }
+            _context.Update(owner.petCount);
+            _context.SaveChanges();
+            return Ok();
+
         }
     }
 }
