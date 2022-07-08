@@ -12,7 +12,7 @@ namespace pet_hotel
         Bulldog,    //3
         Boxer,      //4
         Labrador,   //5
-        Retriver    //6
+        Retriever    //6
     }
     public enum PetColorType {
         Black,       //0
@@ -26,12 +26,11 @@ namespace pet_hotel
 
         [Required]
         public string name {get; set; }
-
         public PetOwner petOwner { get; set; }
 
         public int petOwnerid { get; set; }
 
-        public DateTime checkedInAt { get; set; }
+        public DateTime? checkedInAt { get; set; }
     
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public PetBreedType breed { get; set; }
@@ -42,7 +41,7 @@ namespace pet_hotel
         public bool checkedIn { get; set; }
         public void petCheckIn(){
             checkedIn = true;
-            
+
         }
 
         public void petCheckOut(){

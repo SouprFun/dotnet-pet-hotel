@@ -15,65 +15,102 @@ namespace pet_hotel.Controllers
     public class PetsController : ControllerBase
     {
         private readonly ApplicationContext _context;
-        public PetsController(ApplicationContext context) {
+        public PetsController(ApplicationContext context)
+        {
             _context = context;
         }
 
         // This is just a stub for GET / to prevent any weird frontend errors that 
         // occur when the route is missing in this controller
         [HttpGet]
-        public List<Pet> GetPets() {
+        public List<Pet> GetPets()
+        {
             return _context.Pets
                 .Include(pet => pet.petOwner).ToList();
         }
 
         [HttpGet("{id}")]
-        public Pet getPetById(int id){
+        public Pet getPetById(int id)
+        {
+            Console.WriteLine("get Pet by id: ", id);
             return _context.Pets
                 .Include(pet => pet.petOwner)
                 .SingleOrDefault(pet => pet.id == id);
         }
 
+
         [HttpDelete("{id}")]
-        public IActionResult deletePetById(int id){
+        public IActionResult deletePetById(int id)
+        {
+            Console.WriteLine("delete Pet by id: ", id);
             Pet pet = _context.Pets.Find(id);
-            if (pet == null){
+            Console.WriteLine(pet);
+            if (pet == null)
+            {
                 return NotFound();
             }
             _context.Pets.Remove(pet);
+            _context.SaveChanges();
             return NoContent();
-        } 
-
-        [HttpPost]
-        public IActionResult addPet([FromBody] Pet pet ){
-            _context.Pets.Add(pet);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(getPetById), new { id = pet.id }, pet);
         }
 
-        [HttpPut("{id}/In")]
-        public IActionResult checkInPet(int id){
-            Pet pet = _context.Pets.Find(id);
-            if (pet == null){
+
+
+        [HttpPost] // POST /api/Pets
+        public IActionResult Post([FromBody] Pet pet)
+        { // how to access the http body?
+            PetOwner petOwner = _context.PetOwners.SingleOrDefault(m => m.id == pet.petOwnerid);
+            if (petOwner == null)
+            {
                 return NotFound();
             }
-            pet.petCheckIn();
-            _context.Update(pet);
+            _context.Add(pet);
             _context.SaveChanges();
-            return Ok();
 
+            Pet newPet = _context.Pets.Include(p => p.petOwner).SingleOrDefault(p => p.id == pet.id);
+
+            return CreatedAtAction(nameof(getPetById), new { id = newPet.id }, newPet);
         }
 
-        [HttpPut("{id}/Out")]
-        public IActionResult checkOutPet(int id){
-            Pet pet = _context.Pets.Find(id);
-            if (pet == null){
+        [HttpPut("{id}/checkin")]
+        public IActionResult checkIn(int id)
+        {
+            Pet pet = _context.Pets.SingleOrDefault(p => p.id == id);
+            if (pet == null)
+            {
                 return NotFound();
             }
-            pet.petCheckOut();
+            pet.checkedInAt = DateTime.UtcNow;
             _context.Update(pet);
             _context.SaveChanges();
-            return Ok();
+            return Ok(pet);
+        }
+
+        [HttpPut("{id}/checkout")]
+        public IActionResult checkOut(int id)
+        {
+            Pet pet = _context.Pets.SingleOrDefault(p => p.id == id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+            pet.checkedInAt = null;
+            _context.Update(pet);
+            _context.SaveChanges();
+            return Ok(pet);
+        }
+
+
+
+        [HttpPut("{id}")]
+        public IActionResult updatePet(int id, [FromBody] Pet pet)
+        {
+            if (!_context.Pets.Any(p => p.id == id)) return NotFound();
+            // pet.checkedInAt = null;
+            _context.Update(pet);
+            _context.SaveChanges();
+            //pet.checkedInAt(null);
+            return Ok(_context.Pets.Include(p => p.petOwner).SingleOrDefault(p => p.id == id));
 
         }
         // [HttpGet]

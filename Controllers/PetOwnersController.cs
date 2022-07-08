@@ -55,12 +55,12 @@ namespace pet_hotel.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult updatePetOwnerById(int id)
+        public IActionResult updatePetOwnerById(int id, [FromBody] PetOwner owner)
         {
-            PetOwner owner = _context.PetOwners.Find(id);
-            _context.Update(owner.petCount);
+            if(!_context.PetOwners.Any(b => b.id == id )) return NotFound();
+            _context.Update(owner);
             _context.SaveChanges();
-            return Ok();
+            return Ok(_context.PetOwners.Include(p => p.pets).SingleOrDefault(p => p.id == id));
 
         }
     }
